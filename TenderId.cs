@@ -6,6 +6,11 @@ public struct TenderId
     public static TenderId From(Guid value) => new TenderId {Value = value};
     public static TenderId? From(Guid? value) => value.HasValue ? new TenderId {Value = value.Value} : null;
     
+    public static bool operator ==(TenderId a, Guid b) => a.Value == b;
+    public static bool operator !=(TenderId a, Guid b) => !(a == b);
+    
+    public static implicit operator string(TenderId tenderId) => tenderId.Value.ToString();
+    
     internal static void LinqToDbMapping(LinqToDB.Mapping.MappingSchema ms)
     {
         ms.SetConverter<TenderId, Guid>(id => id.Value);

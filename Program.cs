@@ -14,5 +14,10 @@ var db = new DataConnection(
     new DataOptions().UseMappingSchema(ms)
         .UsePostgreSQL(connectionString));
 
+// issue #4539
 var tenderIdsGuid = new List<Guid> {Guid.NewGuid(), Guid.NewGuid()};
 await db.GetTable<Tender>().Where(i => tenderIdsGuid.Contains(i.Id.Value)).AnyAsync();
+
+// different issue w/ implicitly converted type trying to convert to SQL
+TenderId? tenderId = new TenderId {Value = Guid.NewGuid()};
+await db.GetTable<Tender>().Where(i => tenderId != null && i.Id == tenderId.Value.Value).AnyAsync();
