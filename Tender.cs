@@ -7,4 +7,7 @@ public sealed class Tender
 {
     [Column("id")]
     public TenderId Id { get; set; }
+    
+    [Column("name")]
+    public string Name { get; set; }
 }

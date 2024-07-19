@@ -10,6 +10,9 @@ TenderId.LinqToDbMapping(ms);
 var env = File.ReadAllLines(".env");
 var connectionString = env[0].Substring("connection=".Length);
 
+DataConnection.TurnTraceSwitchOn();
+DataConnection.WriteTraceLine = (s1,s2,_) => Console.WriteLine(s1, s2);
+
 var db = new DataConnection(
     new DataOptions().UseMappingSchema(ms)
         .UsePostgreSQL(connectionString));
