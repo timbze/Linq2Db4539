@@ -17,10 +17,16 @@ var db = new DataConnection(
     new DataOptions().UseMappingSchema(ms)
         .UsePostgreSQL(connectionString));
 
-// issue #4539
-var tenderIdsGuid = new List<Guid> {Guid.NewGuid(), Guid.NewGuid()};
-await db.GetTable<Tender>().Where(i => tenderIdsGuid.Contains(i.Id.Value)).AnyAsync();
+// issue #4539 (works!)
+// var tenderIdsGuid = new List<TenderId> {TenderId.From(Guid.NewGuid()), TenderId.From(Guid.NewGuid())};
+// await db.GetTable<Tender>().Where(i => tenderIdsGuid.Contains(i.Id)).AnyAsync();
 
-// different issue w/ implicitly converted type trying to convert to SQL
-TenderId? tenderId = new TenderId {Value = Guid.NewGuid()};
-await db.GetTable<Tender>().Where(i => tenderId != null && i.Id == tenderId.Value.Value).AnyAsync();
+// // different issue w/ implicitly converted type trying to convert to SQL (works!)
+// TenderId? tenderId = new TenderId {Value = Guid.NewGuid()};
+// await db.GetTable<Tender>().Where(i => tenderId != null && i.Id == tenderId.Value).AnyAsync();
+
+// order by bool (problem)
+var offlineBool = false;
+await db.GetTable<Tender>()
+    .OrderBy(i => offlineBool && i.Name.Length > 1)
+    .FirstOrDefaultAsync();
