@@ -1,5 +1,6 @@
 ﻿using Linq2Db4539;
 using LinqToDB;
+using LinqToDB.Async;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
 
@@ -17,6 +18,8 @@ var db = new DataConnection(
     new DataOptions().UseMappingSchema(ms)
         .UsePostgreSQL(connectionString));
 
+await Run5052.Main(db);
+
 // issue #4539 (works!)
 // var tenderIdsGuid = new List<TenderId> {TenderId.From(Guid.NewGuid()), TenderId.From(Guid.NewGuid())};
 // await db.GetTable<Tender>().Where(i => tenderIdsGuid.Contains(i.Id)).AnyAsync();
@@ -26,7 +29,7 @@ var db = new DataConnection(
 // await db.GetTable<Tender>().Where(i => tenderId != null && i.Id == tenderId.Value).AnyAsync();
 
 // order by bool (problem)
-var offlineBool = false;
-await db.GetTable<Tender>()
-    .OrderBy(i => offlineBool && i.Name.Length > 1)
-    .FirstOrDefaultAsync();
+// var offlineBool = false;
+// await db.GetTable<Tender>()
+//     .OrderBy(i => offlineBool && i.Name.Length > 1)
+//     .FirstOrDefaultAsync();
