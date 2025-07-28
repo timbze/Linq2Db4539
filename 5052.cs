@@ -17,14 +17,15 @@ public sealed class Person
     public int PhoneId { get; set; }
     
     [Association(QueryExpressionMethod = nameof(MapExpression))]
-    public List<MapWithInfo> MapLocations { get; set; } = new();
+    public List<string> MapLocations { get; set; } = new();
     
-    public static Expression<Func<Person, IDataContext, IQueryable<MapWithInfo>>> MapExpression =>
+    public static Expression<Func<Person, IDataContext, IQueryable<string>>> MapExpression =>
         (p, db) => from m in db.GetTable<Map>()
             where m.PersonId == p.Id
-            select new MapWithInfo { Map = m };
+            select m.Location;
 }
 
+[Table("test_phone")]
 public sealed class Phone
 {
     [Column("id"), PrimaryKey, Identity]
@@ -32,11 +33,6 @@ public sealed class Phone
 
     [Column("number")]
     public required string Number { get; set; }
-}
-
-public sealed class MapWithInfo
-{
-    public Map Map { get; set; }
 }
 
 [Table("test_map")]
