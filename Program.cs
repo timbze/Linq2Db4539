@@ -15,21 +15,20 @@ DataConnection.TurnTraceSwitchOn();
 DataConnection.WriteTraceLine = (s1,s2,_) => Console.WriteLine(s1, s2);
 
 var db = new DataConnection(
-    new DataOptions().UseMappingSchema(ms)
+    new DataOptions()
+        .UseMappingSchema(ms)
         .UsePostgreSQL(connectionString));
 
-await Run5052.Main(db);
-
-// issue #4539 (works!)
-// var tenderIdsGuid = new List<TenderId> {TenderId.From(Guid.NewGuid()), TenderId.From(Guid.NewGuid())};
-// await db.GetTable<Tender>().Where(i => tenderIdsGuid.Contains(i.Id)).AnyAsync();
-
-// // different issue w/ implicitly converted type trying to convert to SQL (works!)
-// TenderId? tenderId = new TenderId {Value = Guid.NewGuid()};
-// await db.GetTable<Tender>().Where(i => tenderId != null && i.Id == tenderId.Value).AnyAsync();
-
-// order by bool (problem)
-// var offlineBool = false;
-// await db.GetTable<Tender>()
-//     .OrderBy(i => offlineBool && i.Name.Length > 1)
+// works both 5.4.1 and 6.0.0-rc.2 (comparing Guid to TenderId)
+// List<Guid> tenderIds = new List<Guid> {Guid.NewGuid(), Guid.NewGuid()};
+// var tender = await db
+//     .GetTable<Tender>()
+//     .Where(i => tenderIds.Any(id => id == i.Id))
 //     .FirstOrDefaultAsync();
+
+// generates sql in 5.4.1 but not fails in 6.0.0-rc.2 (Comparing TenderId to TenderId) (both versions crash but for different reasons)
+List<TenderId> tenderIds2 = new List<TenderId> {TenderId.From(Guid.NewGuid()), TenderId.From(Guid.NewGuid())};
+var tender2 = await db
+    .GetTable<Tender>()
+    .Where(i => tenderIds2.Any(id => id == i.Id))
+    .FirstOrDefaultAsync();
