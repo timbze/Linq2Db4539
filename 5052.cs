@@ -48,31 +48,31 @@ public sealed class Map
     public int MapInfoId { get; set; }
 }
 
-public class Run5052
-{
-    public static async Task Main(DataConnection db)
-    {
+// public class Run5052
+// {
+//     public static async Task Main(DataConnection db)
+//     {
         // Data
-        await db.DropTableAsync<Person>(throwExceptionIfNotExists: false);
-        await db.DropTableAsync<Map>(throwExceptionIfNotExists: false);
-        await db.DropTableAsync<Phone>(throwExceptionIfNotExists: false);
-        await db.CreateTableAsync<Person>();
-        await db.CreateTableAsync<Map>();
-        await db.CreateTableAsync<Phone>();
+        // await db.DropTableAsync<Person>(throwExceptionIfNotExists: false);
+        // await db.DropTableAsync<Map>(throwExceptionIfNotExists: false);
+        // await db.DropTableAsync<Phone>(throwExceptionIfNotExists: false);
+        // await db.CreateTableAsync<Person>();
+        // await db.CreateTableAsync<Map>();
+        // await db.CreateTableAsync<Phone>();
 
-        var phoneId = await db.InsertWithInt32IdentityAsync(new Phone { Number = "1234567890" });
-        var id = await db.InsertWithInt32IdentityAsync(new Person { Name = "John", PhoneId = phoneId });
+        // var phoneId = await db.InsertWithInt32IdentityAsync(new Phone { Number = "1234567890" });
+        // var id = await db.InsertWithInt32IdentityAsync(new Person { Name = "John", PhoneId = phoneId });
 
-        await db.InsertAsync(new Map { PersonId = id, Location = "Here" });
-        await db.InsertAsync(new Map { PersonId = id, Location = "There" });
+        // await db.InsertAsync(new Map { PersonId = id, Location = "Here" });
+        // await db.InsertAsync(new Map { PersonId = id, Location = "There" });
 
-        // Query
-        var result = await (from p in db.GetTable<Person>()
-            from ph in db.GetTable<Phone>().LeftJoin(i => i.Id == p.PhoneId)
-            select p)
-            .LoadWith(i => i.MapLocations)
-            .ToListAsync();
+        // // Query
+        // var result = await (from p in db.GetTable<Person>()
+        //     from ph in db.GetTable<Phone>().LeftJoin(i => i.Id == p.PhoneId)
+        //     select p)
+        //     .LoadWith(i => i.MapLocations)
+        //     .ToListAsync();
         
-        Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(result));
-    }
-}
+        // Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(result));
+//     }
+// }
